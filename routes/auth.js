@@ -13,7 +13,7 @@ router.get("/reset", authController.getReset);
 
 router.post(
   "/login",
-  body("emial")
+  body("email")
     .isEmail()
     .withMessage("Please Enter Valid email"),
   authController.postLogin
