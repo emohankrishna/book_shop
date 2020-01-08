@@ -1,5 +1,5 @@
 const path = require('path');
-
+require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
@@ -12,8 +12,8 @@ const csrfProtection = csrf();
 const errorController = require('./controllers/error');
 const User = require('./models/user');
 
-const MONGODB_URI =
-  'mongodb+srv://udamy_mohan:udamy_mohan@mflix-0uncx.mongodb.net/shop';
+const MONGODB_URI = process.env.MONGODB_URI || "";
+const PORT = process.env.PORT || 3030;
 
 const app = express();
 const store = new MongoDBStore({
@@ -32,7 +32,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(
   session({
-    secret: 'my secret',
+    secret: process.env.SESSION_SECRET || "my secret",
     resave: false,
     saveUninitialized: false,
     store: store
@@ -66,7 +66,7 @@ app.use(errorController.get404);
 mongoose
   .connect(MONGODB_URI)
   .then(result => {
-    app.listen(3000);
+    app.listen(PORT);
   })
   .catch(err => {
     console.log(err);
