@@ -48,9 +48,10 @@ app.use((req, res, next) => {
   User.findById(req.session.user._id)
     .then(user => {
       req.user = user;
+      req.session.isLoggedIn = true;
       next();
     })
-    .catch(err => console.log(err));
+    .catch(err => console.log("Failed to get Session", err));
 });
 app.use((req, res, next) => {
   res.locals.isAuthenticated = req.session.isLoggedIn;
@@ -64,7 +65,7 @@ app.use(authRoutes);
 app.use(errorController.get404);
 
 mongoose
-  .connect(MONGODB_URI)
+  .connect(MONGODB_URI, {useNewUrlParser : true, useUnifiedTopology : true})
   .then(result => {
     app.listen(PORT);
   })
