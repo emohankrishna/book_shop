@@ -1,7 +1,7 @@
 const express = require("express");
 const User = require("../models/user");
 const authController = require("../controllers/auth");
-const { check, body } = require("express-validator/check");
+const { check ,body } = require("express-validator");
 
 const router = express.Router();
 
@@ -14,8 +14,9 @@ router.get("/reset", authController.getReset);
 router.post(
   "/login",
   body("email")
-    .isEmail()
-    .withMessage("Please Enter Valid email"),
+  .isEmail()
+  .withMessage("Please Enter Valid email"),
+  body("password"),
   authController.postLogin
 );
 

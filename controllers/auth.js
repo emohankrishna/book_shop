@@ -3,7 +3,7 @@ const nodemailer = require("nodemailer");
 const sendGridTransport = require("nodemailer-sendgrid-transport");
 const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
-const { validationResult } = require("express-validator/check");
+const { validationResult } = require("express-validator");
 
 const transporter = nodemailer.createTransport(sendGridTransport({
   auth: {
@@ -82,7 +82,7 @@ exports.postLogin = (req, res, next) => {
             return res.status(422).render("auth/login", {
               path: "/login",
               pageTitle: "Login",
-              errorMessage: errors.array()[0].msg,
+              errorMessage: "Invalid email or Password",
               oldInput: {
                 email: email,
                 password: password
@@ -92,7 +92,16 @@ exports.postLogin = (req, res, next) => {
           })
           .catch(err => {
             console.log(err);
-            return res.redirect("/login");
+            return res.status(422).render("auth/login", {
+              path: "/login",
+              pageTitle: "Login",
+              errorMessage: "Invalid email or Password",
+              oldInput: {
+                email: email,
+                password: password
+              },
+              validationErrors: []
+            });
           });
       } else {
         console.log("No User with that email");
